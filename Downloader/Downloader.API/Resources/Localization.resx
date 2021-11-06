@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:element name="data">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                    </xsd:sequence>
+                    <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+                    <xsd:attribute ref="xml:space" />
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="RssSourceAlreadyExists" xml:space="preserve">
+        <value>Rss source with this guid already exists</value>
+    </data>
+    <data name="RssSourceNotFound" xml:space="preserve">
+        <value>Rss source with this guid not found</value>
+    </data>
+    <data name="RssSourceNotAvailable" xml:space="preserve">
+        <value>Rss source currently not available</value>
+    </data>
+    <data name="NotARssSource" xml:space="preserve">
+        <value>Provided url not lead to rss source</value>
+    </data>
+    <data name="RssSourceRequestFailed" xml:space="preserve">
+        <value>Request to rss source {0} failed with code {1} and justification {2}. {3}</value>
+    </data>
+</root>

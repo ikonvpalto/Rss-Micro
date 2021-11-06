@@ -6,10 +6,10 @@ namespace Gateway.Services
 {
     public interface IRssSubscriptionManager
     {
-        Task<Guid> Add(RssSubscriptionCreateModel rssSubscription);
+        Task<Guid> CreateAsync(RssSubscriptionCreateModel rssSubscription);
 
-        Task Update(RssSubscription rssSubscription);
+        Task UpdateAsync(RssSubscription rssSubscription);
 
-        Task Delete(Guid guid);
+        Task DeleteAsync(Guid guid);
     }
 }

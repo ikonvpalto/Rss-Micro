@@ -1,0 +1,97 @@
+﻿version: "3"
+
+services:
+  gateway:
+    container_name: rss-service-gateway
+    build:
+      context: ./
+      dockerfile: Gateway/Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      DownloaderAddress: "http://rss-service-downloader"
+
+  downloader:
+    container_name: rss-service-downloader
+    build:
+      context: ./
+      dockerfile: Downloader/Downloader.API/Dockerfile
+    depends_on:
+      - downloader-db
+    environment:
+      ConnectionString: "Host=rss-service-downloader-db;Port=5432;Database=downloader-db;Username=kvp;Password=unhackable_password;"
+
+  downloader-db:
+    container_name: rss-service-downloader-db
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: unhackable_password
+      POSTGRES_USER: kvp
+      POSTGRES_DB: downloader-db
+
+#  filter:
+#    container_name: rss-service-filter
+#    build:
+#      context: ./
+#      dockerfile: Filter/Dockerfile
+#    depends_on:
+#      - filter-db
+
+  filter-db:
+    container_name: rss-service-filter-db
+    image: postgres
+#    ports:
+#      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: unhackable_password
+      POSTGRES_USER: kvp
+      POSTGRES_DB: filter-db
+
+#  sender:
+#    container_name: rss-service-sender
+#    build:
+#      context: ./
+#      dockerfile: Sender/Dockerfile
+#    depends_on:
+#      - sender-db
+
+  sender-db:
+    container_name: rss-service-sender-db
+    image: postgres
+#    ports:
+#      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: unhackable_password
+      POSTGRES_USER: kvp
+      POSTGRES_DB: sender-db
+
+#  manager:
+#    container_name: rss-service-manager
+#    build:
+#      context: ./
+#      dockerfile: Manager/Dockerfile
+#    depends_on:
+#      - manager-db
+
+  manager-db:
+    container_name: rss-service-manager-db
+    image: postgres
+#    ports:
+#      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: unhackable_password
+      POSTGRES_USER: kvp
+      POSTGRES_DB: manager-db
+
+  bus:
+    container_name: rss-service-bus
+    image: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  email-server:
+    container_name: rss-service-email
+    image: rodolpheche/wiremock:2.27.2
+    ports:
+      - "6363:8080"

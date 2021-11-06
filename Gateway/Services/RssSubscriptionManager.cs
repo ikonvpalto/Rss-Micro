@@ -1,24 +1,54 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
+using Downloader.Common.Contracts;
+using Downloader.Common.Models;
 using Gateway.Models;
 
 namespace Gateway.Services
 {
     public sealed class RssSubscriptionManager : IRssSubscriptionManager
     {
-        public Task<Guid> Add(RssSubscriptionCreateModel rssSubscription)
+        private readonly IMapper _mapper;
+        private readonly IDownloaderProvider _downloaderProvider;
+        private readonly IDownloaderManager _downloaderManager;
+
+        public RssSubscriptionManager(IMapper mapper, IDownloaderProvider downloaderProvider, IDownloaderManager downloaderManager)
         {
-            throw new NotImplementedException();
+            _mapper = mapper;
+            _downloaderProvider = downloaderProvider;
+            _downloaderManager = downloaderManager;
         }
 
-        public Task Update(RssSubscription rssSubscription)
+        public async Task<Guid> CreateAsync(RssSubscriptionCreateModel rssSubscription)
         {
-            throw new NotImplementedException();
+            await EnsureSubscriptionInfoValidAsync(rssSubscription).ConfigureAwait(false);
+
+            var guid = Guid.NewGuid();
+
+            var rssSource = _mapper.Map<RssSourceManageModel>(rssSubscription);
+            rssSource.Guid = guid;
+            await _downloaderManager.CreateAsync(rssSource).ConfigureAwait(false);
+
+            return guid;
         }
 
-        public Task Delete(Guid guid)
+        public async Task UpdateAsync(RssSubscription rssSubscription)
         {
-            throw new NotImplementedException();
+            await EnsureSubscriptionInfoValidAsync(rssSubscription).ConfigureAwait(false);
+
+            var rssSource = _mapper.Map<RssSourceManageModel>(rssSubscription);
+            await _downloaderManager.UpdateAsync(rssSource).ConfigureAwait(false);
+        }
+
+        public async Task DeleteAsync(Guid guid)
+        {
+            await _downloaderManager.DeleteAsync(guid).ConfigureAwait(false);
+        }
+
+        private async Task EnsureSubscriptionInfoValidAsync(BaseRssSubscription rssSubscription)
+        {
+            await _downloaderProvider.EnsureRssSourceValidAsync(rssSubscription.RssSource).ConfigureAwait(false);
         }
     }
 }

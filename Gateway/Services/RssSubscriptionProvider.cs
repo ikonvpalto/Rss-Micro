@@ -7,12 +7,12 @@ namespace Gateway.Services
 {
     public sealed class RssSubscriptionProvider : IRssSubscriptionProvider
     {
-        public Task<RssSubscription> Get(Guid guid)
+        public Task<RssSubscription> GetAsync(Guid guid)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ICollection<RssSubscription>> Get()
+        public Task<ICollection<RssSubscription>> GetAsync()
         {
             throw new NotImplementedException();
         }

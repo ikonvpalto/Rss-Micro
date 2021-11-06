@@ -7,8 +7,8 @@ namespace Gateway.Services
 {
     public interface IRssSubscriptionProvider
     {
-        Task<RssSubscription> Get(Guid guid);
+        Task<RssSubscription> GetAsync(Guid guid);
 
-        Task<ICollection<RssSubscription>> Get();
+        Task<ICollection<RssSubscription>> GetAsync();
     }
 }

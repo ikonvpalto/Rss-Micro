@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Gateway.Models;
 using Gateway.Services;
@@ -31,27 +29,27 @@ namespace Gateway.Controllers
         [HttpGet("")]
         public async Task<ICollection<RssSubscription>> GetAllRssSubscriptions()
         {
-            return await _rssSubscriptionProvider.Get().ConfigureAwait(false);
+            return await _rssSubscriptionProvider.GetAsync().ConfigureAwait(false);
         }
 
         [HttpPost("")]
         public async Task<RssSubscription> AddNewRssSubscription(RssSubscriptionCreateModel rssSubscription)
         {
-            var guid = await _rssSubscriptionManager.Add(rssSubscription).ConfigureAwait(false);
-            return await _rssSubscriptionProvider.Get(guid).ConfigureAwait(false);
+            var guid = await _rssSubscriptionManager.CreateAsync(rssSubscription).ConfigureAwait(false);
+            return await _rssSubscriptionProvider.GetAsync(guid).ConfigureAwait(false);
         }
 
         [HttpPut("")]
         public async Task<RssSubscription> UpdateRssSubscription(RssSubscription rssSubscription)
         {
-            await _rssSubscriptionManager.Update(rssSubscription).ConfigureAwait(false);
-            return await _rssSubscriptionProvider.Get(rssSubscription.Guid).ConfigureAwait(false);
+            await _rssSubscriptionManager.UpdateAsync(rssSubscription).ConfigureAwait(false);
+            return await _rssSubscriptionProvider.GetAsync(rssSubscription.Guid).ConfigureAwait(false);
         }
 
         [HttpDelete("")]
         public async Task DeleteRssSubscription(Guid rssSubscriptionGuid)
         {
-            await _rssSubscriptionManager.Delete(rssSubscriptionGuid).ConfigureAwait(false);
+            await _rssSubscriptionManager.DeleteAsync(rssSubscriptionGuid).ConfigureAwait(false);
         }
     }
 }
