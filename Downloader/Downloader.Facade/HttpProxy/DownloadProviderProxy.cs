@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Common.Extensions;
@@ -16,6 +17,11 @@ namespace Downloader.Facade.HttpProxy
         {
             _httpClient = httpClient;
             _baseUrl = baseUrl;
+        }
+
+        public async Task<RssSourceReadModel> GetAsync(Guid guid)
+        {
+            return await _httpClient.InternalGet<RssSourceReadModel>($"{_baseUrl}/api/rss-sources/{guid:D}").ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<RssSourceReadModel>> GetAsync()

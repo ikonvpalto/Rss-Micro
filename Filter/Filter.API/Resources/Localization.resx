@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:element name="data">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                    </xsd:sequence>
+                    <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+                    <xsd:attribute ref="xml:space" />
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="FilterAlreadyExists" xml:space="preserve">
+        <value>Filter with this guid already exists</value>
+    </data>
+    <data name="FilterNotFound" xml:space="preserve">
+        <value>Filter with this guid not found</value>
+    </data>
+    <data name="NotAFilter" xml:space="preserve">
+        <value>Provided filter {0} isn't correct. It should be a valid regular expression</value>
+    </data>
+</root>

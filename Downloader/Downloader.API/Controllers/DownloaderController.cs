@@ -30,6 +30,15 @@ namespace Downloader.API.Controllers
         }
 
         [HttpGet]
+        [Route("{rssSourceGuid:guid}")]
+        [ProducesResponseType(typeof(RssSourceReadModel), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetRssSourceAsync([FromRoute] Guid rssSourceGuid)
+        {
+            var sources = await _downloaderProvider.GetAsync(rssSourceGuid).ConfigureAwait(false);
+            return Ok(sources);
+        }
+
+        [HttpGet]
         [Route("")]
         [ProducesResponseType(typeof(IEnumerable<RssSourceReadModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetRssSourcesAsync()

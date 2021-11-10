@@ -1,22 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Db.Common.Repositories;
 using Downloader.API.Models;
 
 namespace Downloader.API.Repositories
 {
-    public interface IRssSourceRepository
+    public interface IRssSourceRepository : IBaseRepository<RssSource>
     {
-        Task CreateAsync(RssSource rssSource);
-
-        Task<RssSource> GetAsync(Guid rssSourceGuid);
-
-        Task<IEnumerable<RssSource>> GetAsync();
-
-        Task<bool> IsRssSourceExistsAsync(Guid rssSourceGuid);
-
-        Task UpdateAsync(RssSource rssSource);
-
-        Task DeleteAsync(Guid rssSourceGuid);
     }
 }

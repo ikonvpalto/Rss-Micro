@@ -49,7 +49,7 @@ namespace Api.Common
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new () {Title = assemblyName, Version = "v1"});
-                c.MapType<TimeSpan>(() => new () { Type = "string", Default = new OpenApiString("24:00:00"), Format = DateTimeFormats.TimeSpanJsonFormat });
+                c.MapType<TimeSpan>(() => new () { Type = "string", Default = new OpenApiString("1.00:00:00"), Format = DateTimeFormats.TimeSpanJsonFormat });
             });
 
             services.AddAutoMapper(entryAssembly);

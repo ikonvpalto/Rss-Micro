@@ -7,7 +7,7 @@ namespace Downloader.Facade
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddDownloaderProxy(this IServiceCollection services, string baseUrl)
+        public static IServiceCollection AddDownloaderProxies(this IServiceCollection services, string baseUrl)
         {
             services.AddScoped<IDownloaderProvider>(s =>
             {

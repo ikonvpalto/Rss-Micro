@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -22,10 +23,16 @@ namespace Downloader.API.Services
             _rssExternalRepository = rssExternalRepository;
         }
 
+        public async Task<RssSourceReadModel> GetAsync(Guid guid)
+        {
+            var rssSource = await _rssSourceRepository.GetAsync(guid).ConfigureAwait(false);
+            return _mapper.Map<RssSourceReadModel>(rssSource);
+        }
+
         public async Task<IEnumerable<RssSourceReadModel>> GetAsync()
         {
-            var rssSource = await _rssSourceRepository.GetAsync().ConfigureAwait(false);
-            return rssSource.Select(_mapper.Map<RssSourceReadModel>);
+            var rssSources = await _rssSourceRepository.GetAsync().ConfigureAwait(false);
+            return rssSources.Select(_mapper.Map<RssSourceReadModel>);
         }
 
         public async Task EnsureRssSourceValidAsync(string rssSourceUrl)

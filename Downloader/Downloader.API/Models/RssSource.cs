@@ -1,8 +1,9 @@
 ﻿using System;
+using Db.Common.Models;
 
 namespace Downloader.API.Models
 {
-    public sealed class RssSource
+    public sealed class RssSource : IDbModel
     {
         public Guid Guid { get; set; }
 

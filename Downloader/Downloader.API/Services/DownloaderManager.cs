@@ -31,7 +31,7 @@ namespace Downloader.API.Services
 
         public async Task CreateAsync(RssSourceManageModel rssSource)
         {
-            if (await _rssSourceRepository.IsRssSourceExistsAsync(rssSource.Guid).ConfigureAwait(false))
+            if (await _rssSourceRepository.IsExistsAsync(rssSource.Guid).ConfigureAwait(false))
             {
                 throw new AlreadyExistsException(Localization.RssSourceAlreadyExists);
             }
@@ -46,7 +46,7 @@ namespace Downloader.API.Services
 
         public async Task UpdateAsync(RssSourceManageModel rssSource)
         {
-            if (!await _rssSourceRepository.IsRssSourceExistsAsync(rssSource.Guid).ConfigureAwait(false))
+            if (!await _rssSourceRepository.IsExistsAsync(rssSource.Guid).ConfigureAwait(false))
             {
                 throw new NotFoundException(Localization.RssSourceNotFound);
             }
@@ -61,7 +61,7 @@ namespace Downloader.API.Services
 
         public async Task DeleteAsync(Guid rssSourceGuid)
         {
-            if (!await _rssSourceRepository.IsRssSourceExistsAsync(rssSourceGuid).ConfigureAwait(false))
+            if (!await _rssSourceRepository.IsExistsAsync(rssSourceGuid).ConfigureAwait(false))
             {
                 throw new NotFoundException(Localization.RssSourceNotFound);
             }
@@ -71,7 +71,7 @@ namespace Downloader.API.Services
 
         public async Task<IEnumerable<NewsItem>> DownloadNewsAsync(Guid rssSourceGuid)
         {
-            if (!await _rssSourceRepository.IsRssSourceExistsAsync(rssSourceGuid).ConfigureAwait(false))
+            if (!await _rssSourceRepository.IsExistsAsync(rssSourceGuid).ConfigureAwait(false))
             {
                 throw new NotFoundException(Localization.RssSourceNotFound);
             }

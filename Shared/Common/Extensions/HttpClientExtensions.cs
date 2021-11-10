@@ -12,11 +12,13 @@ namespace Common.Extensions
     {
         private const string JsonMediaType = "application/json";
 
-        public static async Task InternalPost<TBody>(this HttpClient httpClient, string url, TBody body)
+        public static async Task InternalPost(this HttpClient httpClient, string url, object body = null)
         {
             var message = new HttpRequestMessage
             {
-                Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, JsonMediaType),
+                Content = body is null
+                    ? null
+                    : new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, JsonMediaType),
                 Method = HttpMethod.Post,
                 RequestUri = new Uri(url)
             };
@@ -24,10 +26,13 @@ namespace Common.Extensions
             await httpClient.SendInternalRequest(message).ConfigureAwait(false);
         }
 
-        public static async Task<TResponse> InternalPost<TResponse>(this HttpClient httpClient, string url)
+        public static async Task<TResponse> InternalPost<TResponse>(this HttpClient httpClient, string url, object body = null)
         {
             var message = new HttpRequestMessage
             {
+                Content = body is null
+                    ? null
+                    : new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, JsonMediaType),
                 Method = HttpMethod.Post,
                 RequestUri = new Uri(url)
             };

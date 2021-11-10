@@ -1,5 +1,6 @@
 using Api.Common;
 using Downloader.Facade;
+using Filter.Facade;
 using Gateway.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ namespace Gateway
     public sealed class Startup : BaseStartup
     {
         private const string DownloaderAddressParam = "DownloaderAddress";
+        private const string FilterAddressParam = "FilterAddress";
 
         public Startup(IConfiguration configuration) : base(configuration) {}
 
@@ -19,7 +21,8 @@ namespace Gateway
             services.AddScoped<IRssSubscriptionProvider, RssSubscriptionProvider>();
             services.AddScoped<IRssSubscriptionManager, RssSubscriptionManager>();
 
-            services.AddDownloaderProxy(Configuration[DownloaderAddressParam]);
+            services.AddDownloaderProxies(Configuration[DownloaderAddressParam]);
+            services.AddFilterProxies(Configuration[FilterAddressParam]);
 
             return services;
         }

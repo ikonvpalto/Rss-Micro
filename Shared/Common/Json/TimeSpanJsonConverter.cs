@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Globalization;
+using Common.Exceptions;
+using Common.Resources;
 using Newtonsoft.Json;
 
 namespace Common.Json
@@ -14,9 +17,15 @@ namespace Common.Json
             JsonSerializer serializer)
         {
             var stringValue = (string)reader.Value;
-            return string.IsNullOrWhiteSpace(stringValue)
-                ? TimeSpan.Zero
-                : TimeSpan.Parse(stringValue);
+
+            if (string.IsNullOrWhiteSpace(stringValue)
+                || !TimeSpan.TryParseExact(stringValue, DateTimeFormats.TimeSpanJsonFormat,
+                    CultureInfo.InvariantCulture, out var time))
+            {
+                throw new BadRequestException(string.Format(Localization.IncorrectTimeFormat, stringValue, DateTimeFormats.TimeSpanJsonFormat));
+            }
+
+            return time;
         }
     }
 }
