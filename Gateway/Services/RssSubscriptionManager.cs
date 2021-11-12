@@ -6,6 +6,8 @@ using Downloader.Common.Models;
 using Filter.Common.Contracts;
 using Filter.Common.Models;
 using Gateway.Models;
+using Manager.Common.Contracts;
+using Manager.Common.Models;
 using Sender.Common.Contracts;
 using Sender.Common.Models;
 
@@ -20,6 +22,8 @@ namespace Gateway.Services
         private readonly IFilterManager _filterManager;
         private readonly ISenderProvider _senderProvider;
         private readonly ISenderManager _senderManager;
+        private readonly IManagerProvider _managerProvider;
+        private readonly IManagerManager _managerManager;
 
         public RssSubscriptionManager(
             IMapper mapper,
@@ -28,7 +32,9 @@ namespace Gateway.Services
             IFilterProvider filterProvider,
             IFilterManager filterManager,
             ISenderProvider senderProvider,
-            ISenderManager senderManager)
+            ISenderManager senderManager,
+            IManagerProvider managerProvider,
+            IManagerManager managerManager)
         {
             _mapper = mapper;
             _downloaderProvider = downloaderProvider;
@@ -37,6 +43,8 @@ namespace Gateway.Services
             _filterManager = filterManager;
             _senderProvider = senderProvider;
             _senderManager = senderManager;
+            _managerProvider = managerProvider;
+            _managerManager = managerManager;
         }
 
         public async Task<Guid> CreateAsync(RssSubscriptionCreateModel rssSubscription)
@@ -57,6 +65,10 @@ namespace Gateway.Services
             receivers.Guid = guid;
             await _senderManager.CreateAsync(receivers).ConfigureAwait(false);
 
+            var job = _mapper.Map<JobModel>(rssSubscription);
+            job.Guid = guid;
+            await _managerManager.CreateAsync(job).ConfigureAwait(false);
+
             return guid;
         }
 
@@ -72,13 +84,18 @@ namespace Gateway.Services
 
             var receivers = _mapper.Map<ReceiversModel>(rssSubscription);
             await _senderManager.UpdateAsync(receivers).ConfigureAwait(false);
+
+            var job = _mapper.Map<JobModel>(rssSubscription);
+            await _managerManager.UpdateAsync(job).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(Guid guid)
         {
-            await _downloaderManager.DeleteAsync(guid).ConfigureAwait(false);
-            await _filterManager.DeleteAsync(guid).ConfigureAwait(false);
-            await _senderManager.DeleteAsync(guid).ConfigureAwait(false);
+            await Task.WhenAll(
+                _downloaderManager.DeleteAsync(guid),
+                _filterManager.DeleteAsync(guid),
+                _senderManager.DeleteAsync(guid),
+                _managerManager.DeleteAsync(guid));
         }
 
         private async Task EnsureSubscriptionInfoValidAsync(BaseRssSubscription rssSubscription)
@@ -86,7 +103,8 @@ namespace Gateway.Services
             await Task.WhenAll(
                 _downloaderProvider.EnsureRssSourceIsValidAsync(rssSubscription.RssSource),
                 _filterProvider.EnsureFiltersIsValidAsync(rssSubscription.Filters),
-                _senderProvider.EnsureReceiversIsValidAsync(rssSubscription.Receivers)
+                _senderProvider.EnsureReceiversIsValidAsync(rssSubscription.Receivers),
+                _managerProvider.EnsureJobPeriodicityIsValidAsync(rssSubscription.Periodicity)
             ).ConfigureAwait(false);
         }
     }

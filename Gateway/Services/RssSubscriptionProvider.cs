@@ -6,6 +6,7 @@ using AutoMapper;
 using Downloader.Common.Contracts;
 using Filter.Common.Contracts;
 using Gateway.Models;
+using Manager.Common.Contracts;
 using Microsoft.Extensions.Logging;
 using Sender.Common.Contracts;
 
@@ -18,19 +19,22 @@ namespace Gateway.Services
         private readonly IDownloaderProvider _downloaderProvider;
         private readonly IFilterProvider _filterProvider;
         private readonly ISenderProvider _senderProvider;
+        private readonly IManagerProvider _managerProvider;
 
         public RssSubscriptionProvider(
             ILogger<RssSubscriptionProvider> logger,
             IMapper mapper,
             IDownloaderProvider downloaderProvider,
             IFilterProvider filterProvider,
-            ISenderProvider senderProvider)
+            ISenderProvider senderProvider,
+            IManagerProvider managerProvider)
         {
             _logger = logger;
             _mapper = mapper;
             _downloaderProvider = downloaderProvider;
             _filterProvider = filterProvider;
             _senderProvider = senderProvider;
+            _managerProvider = managerProvider;
         }
 
         public async Task<RssSubscription> GetAsync(Guid guid)
@@ -46,6 +50,9 @@ namespace Gateway.Services
             var receivers = await _senderProvider.GetAsync(guid).ConfigureAwait(false);
             model = _mapper.Map(receivers, model);
 
+            var job = await _managerProvider.GetAsync(guid).ConfigureAwait(false);
+            model = _mapper.Map(job, model);
+
             return model;
         }
 
@@ -59,6 +66,9 @@ namespace Gateway.Services
 
             var receivers = (await _senderProvider.GetAsync().ConfigureAwait(false)).ToArray();
             var receiverMap = receivers.ToDictionary(s => s.Guid, s => s);
+
+            var jobs = (await _managerProvider.GetAsync().ConfigureAwait(false)).ToArray();
+            var jobMap = receivers.ToDictionary(s => s.Guid, s => s);
 
             var guids = rssSources.Select(s => s.Guid);
             var rssSubscriptions = guids
@@ -79,10 +89,16 @@ namespace Gateway.Services
                         _logger.LogError("Can't find receivers with guid {1:D}", g);
                         return null;
                     }
+                    if (!jobMap.ContainsKey(g))
+                    {
+                        _logger.LogError("Can't find job with guid {1:D}", g);
+                        return null;
+                    }
 
                     var result = _mapper.Map<RssSubscription>(rssSourcesMap[g]);
                     result = _mapper.Map(filterMap[g], result);
                     result = _mapper.Map(receiverMap[g], result);
+                    result = _mapper.Map(jobMap[g], result);
 
                     return result;
                 })

@@ -16,8 +16,6 @@ namespace Sender.API.Services
 {
     public sealed class SenderProvider : ISenderProvider
     {
-        private static readonly Regex EmailRegex = new (@"[a-zA-Z0-9.-_]@[a-zA-Z0-9-_]\.[a-zA-Z0-9-_]");
-
         private readonly IMapper _mapper;
         private readonly IEmailRepository _emailRepository;
 

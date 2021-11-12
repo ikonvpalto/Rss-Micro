@@ -3,6 +3,7 @@ using Common.Extensions;
 using Downloader.Common.Models;
 using Filter.Common.Models;
 using Gateway.Models;
+using Manager.Common.Models;
 using Sender.Common.Models;
 
 namespace Gateway
@@ -48,6 +49,19 @@ namespace Gateway
             CreateMap<ReceiversModel, RssSubscription>()
                 .ForMember(d => d.Guid, o => o.MapFrom(d => d.Guid))
                 .ForMember(d => d.Receivers, o => o.MapFrom(d => d.Receivers))
+                .ForAllOtherMembers(o => o.Ignore());
+
+            CreateMap<BaseRssSubscription, JobModel>()
+                .IncludeAllDerived()
+                .ForMember(d => d.Periodicity, o => o.MapFrom(s => s.Periodicity))
+                .ForAllOtherMembers(o => o.Ignore());
+
+            CreateMap<RssSubscription, JobModel>()
+                .ForMember(d => d.Guid, o => o.MapFrom(d => d.Guid));
+
+            CreateMap<JobModel, RssSubscription>()
+                .ForMember(d => d.Guid, o => o.MapFrom(d => d.Guid))
+                .ForMember(d => d.Periodicity, o => o.MapFrom(d => d.Periodicity))
                 .ForAllOtherMembers(o => o.Ignore());
 
             this.AssertConfigurationIsValid();

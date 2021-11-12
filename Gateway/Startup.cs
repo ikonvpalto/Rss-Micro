@@ -2,6 +2,7 @@ using Api.Common;
 using Downloader.Facade;
 using Filter.Facade;
 using Gateway.Services;
+using Manager.Facade;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ namespace Gateway
         private const string DownloaderAddressParam = "DownloaderAddress";
         private const string FilterAddressParam = "FilterAddress";
         private const string SenderAddressParam = "SenderAddress";
+        private const string ManagerAddressParam = "ManagerAddress";
 
         public Startup(IConfiguration configuration) : base(configuration) {}
 
@@ -26,6 +28,7 @@ namespace Gateway
             services.AddDownloaderProxies(Configuration[DownloaderAddressParam]);
             services.AddFilterProxies(Configuration[FilterAddressParam]);
             services.AddSenderProxies(Configuration[SenderAddressParam]);
+            services.AddManagerProxies(Configuration[ManagerAddressParam]);
 
             return services;
         }

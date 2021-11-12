@@ -11,7 +11,7 @@ using Downloader.Common.Models;
 
 namespace Downloader.API.Services
 {
-    public class DownloaderProvider : IDownloaderProvider
+    public sealed class DownloaderProvider : IDownloaderProvider
     {
         private readonly IRssSourceRepository _rssSourceRepository;
         private readonly IMapper _mapper;
