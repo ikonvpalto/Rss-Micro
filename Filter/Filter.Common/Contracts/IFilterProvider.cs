@@ -14,6 +14,6 @@ namespace Filter.Common.Contracts
 
         Task<IEnumerable<NewsItem>> FilterNewsAsync(Guid filterGuid, IEnumerable<NewsItem> news);
 
-        Task EnsureFiltersValidAsync(IEnumerable<string> filters);
+        Task EnsureFiltersIsValidAsync(IEnumerable<string> filters);
     }
 }

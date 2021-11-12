@@ -4,7 +4,7 @@ using Db.Common.Models;
 
 namespace Filter.API.Models
 {
-    public sealed class FilterModel : IDbModel
+    public sealed class FilterModel : IDbCollectionModel
     {
         public Guid Guid { get; set; }
 

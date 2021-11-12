@@ -11,6 +11,6 @@ namespace Downloader.Common.Contracts
 
         Task<IEnumerable<RssSourceReadModel>> GetAsync();
 
-        Task EnsureRssSourceValidAsync(string rssSourceUrl);
+        Task EnsureRssSourceIsValidAsync(string rssSourceUrl);
     }
 }

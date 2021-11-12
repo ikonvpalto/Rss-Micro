@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Downloader.API.ExternalRepositories;
+using Downloader.API.ExternalServices;
 using Downloader.API.Repositories;
 using Downloader.Common.Contracts;
 using Downloader.Common.Models;
@@ -14,13 +15,13 @@ namespace Downloader.API.Services
     {
         private readonly IRssSourceRepository _rssSourceRepository;
         private readonly IMapper _mapper;
-        private readonly IRssExternalRepository _rssExternalRepository;
+        private readonly IRssExternalService _rssExternalService;
 
-        public DownloaderProvider(IRssSourceRepository rssSourceRepository, IMapper mapper, IRssExternalRepository rssExternalRepository)
+        public DownloaderProvider(IRssSourceRepository rssSourceRepository, IMapper mapper, IRssExternalService rssExternalService)
         {
             _rssSourceRepository = rssSourceRepository;
             _mapper = mapper;
-            _rssExternalRepository = rssExternalRepository;
+            _rssExternalService = rssExternalService;
         }
 
         public async Task<RssSourceReadModel> GetAsync(Guid guid)
@@ -35,9 +36,9 @@ namespace Downloader.API.Services
             return rssSources.Select(_mapper.Map<RssSourceReadModel>);
         }
 
-        public async Task EnsureRssSourceValidAsync(string rssSourceUrl)
+        public async Task EnsureRssSourceIsValidAsync(string rssSourceUrl)
         {
-            await _rssExternalRepository.EnsureCorrectRssSourceAsync(rssSourceUrl).ConfigureAwait(false);
+            await _rssExternalService.EnsureCorrectRssSourceAsync(rssSourceUrl).ConfigureAwait(false);
         }
     }
 }

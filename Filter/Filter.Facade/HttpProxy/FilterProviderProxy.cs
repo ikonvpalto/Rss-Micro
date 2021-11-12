@@ -35,7 +35,7 @@ namespace Filter.Facade.HttpProxy
             return await _httpClient.InternalPost<IEnumerable<NewsItem>>($"{_baseUrl}/api/filter/{filterGuid:D}/filter-news", news).ConfigureAwait(false);
         }
 
-        public async Task EnsureFiltersValidAsync(IEnumerable<string> filters)
+        public async Task EnsureFiltersIsValidAsync(IEnumerable<string> filters)
         {
             await _httpClient.InternalPost($"{_baseUrl}/api/filter/ensure-valid", filters).ConfigureAwait(false);
         }

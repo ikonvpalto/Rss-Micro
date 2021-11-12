@@ -1,6 +1,7 @@
 using Api.Common;
 using Downloader.API.Database;
 using Downloader.API.ExternalRepositories;
+using Downloader.API.ExternalServices;
 using Downloader.API.Repositories;
 using Downloader.API.Services;
 using Downloader.Common.Contracts;
@@ -22,7 +23,7 @@ namespace Downloader.API
                 options.UseNpgsql(Configuration["ConnectionString"]));
 
             services.AddScoped<IRssSourceRepository, RssSourceRepository>();
-            services.AddScoped<IRssExternalRepository, RssExternalRepository>();
+            services.AddScoped<IRssExternalService, RssExternalService>();
             services.AddScoped<IDownloaderManager, DownloaderManager>();
             services.AddScoped<IDownloaderProvider, DownloaderProvider>();
 

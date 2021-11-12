@@ -4,9 +4,10 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Db.Common.Models;
 
-namespace Db.Common.Repositories
+namespace Db.Common.Repositories.Contracts
 {
-    public interface IBaseRepository<TModel> where TModel : IDbModel
+    public interface IBaseRepository<TModel>
+        where TModel : IDbModel
     {
         Task CreateAsync(TModel model);
 

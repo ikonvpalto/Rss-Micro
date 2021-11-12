@@ -53,7 +53,7 @@ namespace Downloader.API.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> EnsureRssSourceValidAsync([FromQuery] string rssSourceUrl)
         {
-            await _downloaderProvider.EnsureRssSourceValidAsync(rssSourceUrl).ConfigureAwait(false);
+            await _downloaderProvider.EnsureRssSourceIsValidAsync(rssSourceUrl).ConfigureAwait(false);
             return Ok();
         }
 

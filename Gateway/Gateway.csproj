@@ -17,6 +17,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Downloader\Downloader.Facade\Downloader.Facade.csproj" />
       <ProjectReference Include="..\Filter\Filter.Facade\Filter.Facade.csproj" />
+      <ProjectReference Include="..\Sender\Sender.Facade\Sender.Facade.csproj" />
       <ProjectReference Include="..\Shared\Api.Common\Api.Common.csproj" />
       <ProjectReference Include="..\Shared\Common\Common.csproj" />
     </ItemGroup>

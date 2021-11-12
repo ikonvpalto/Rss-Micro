@@ -34,7 +34,7 @@ namespace Filter.API.Services
                 throw new AlreadyExistsException(Localization.FilterAlreadyExists);
             }
 
-            await _filterProvider.EnsureFiltersValidAsync(filter.Filters).ConfigureAwait(false);
+            await _filterProvider.EnsureFiltersIsValidAsync(filter.Filters).ConfigureAwait(false);
 
             var models = filter.Filters.Select(f =>
             {
@@ -53,9 +53,9 @@ namespace Filter.API.Services
                 throw new NotFoundException(Localization.FilterNotFound);
             }
 
-            await _filterProvider.EnsureFiltersValidAsync(filter.Filters).ConfigureAwait(false);
+            await _filterProvider.EnsureFiltersIsValidAsync(filter.Filters).ConfigureAwait(false);
 
-            await _filterRepository.DeleteByGroupGuidAsync(filter.Guid).ConfigureAwait(false);
+            await _filterRepository.DeleteGroupAsync(filter.Guid).ConfigureAwait(false);
 
             await CreateAsync(filter).ConfigureAwait(false);
         }
@@ -67,7 +67,7 @@ namespace Filter.API.Services
                 throw new NotFoundException(Localization.FilterNotFound);
             }
 
-            await _filterRepository.DeleteByGroupGuidAsync(filterGuid).ConfigureAwait(false);
+            await _filterRepository.DeleteGroupAsync(filterGuid).ConfigureAwait(false);
         }
     }
 }

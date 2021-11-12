@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Downloader.API.Models;
 
-namespace Downloader.API.ExternalRepositories
+namespace Downloader.API.ExternalServices
 {
-    public interface IRssExternalRepository
+    public interface IRssExternalService
     {
         Task EnsureCorrectRssSourceAsync(string rssSourceUrl);
 

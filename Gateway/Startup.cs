@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sender.Facade;
 
 namespace Gateway
 {
@@ -13,6 +14,7 @@ namespace Gateway
     {
         private const string DownloaderAddressParam = "DownloaderAddress";
         private const string FilterAddressParam = "FilterAddress";
+        private const string SenderAddressParam = "SenderAddress";
 
         public Startup(IConfiguration configuration) : base(configuration) {}
 
@@ -23,6 +25,7 @@ namespace Gateway
 
             services.AddDownloaderProxies(Configuration[DownloaderAddressParam]);
             services.AddFilterProxies(Configuration[FilterAddressParam]);
+            services.AddSenderProxies(Configuration[SenderAddressParam]);
 
             return services;
         }

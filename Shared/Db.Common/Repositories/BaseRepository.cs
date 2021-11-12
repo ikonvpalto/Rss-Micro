@@ -4,76 +4,77 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Db.Common.Models;
+using Db.Common.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Db.Common.Repositories
 {
     public abstract class BaseRepository<TModel> : IBaseRepository<TModel> where TModel : class, IDbModel
     {
-        private readonly DbContext _dbContext;
-        private readonly DbSet<TModel> _dbSet;
+        protected readonly DbContext DbContext;
+        protected readonly DbSet<TModel> DbSet;
 
         protected BaseRepository(DbContext dbContext, DbSet<TModel> dbSet)
         {
-            _dbContext = dbContext;
-            _dbSet = dbSet;
+            DbContext = dbContext;
+            DbSet = dbSet;
         }
 
         public async Task CreateAsync(TModel model)
         {
-            _dbSet.Add(model);
-            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            DbSet.Add(model);
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task CreateAsync(IEnumerable<TModel> models)
         {
-            _dbSet.AddRange(models);
-            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            DbSet.AddRange(models);
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<TModel> GetAsync(Guid guid)
         {
-            return await _dbSet.SingleOrDefaultAsync(s => s.Guid == guid).ConfigureAwait(false);
+            return await DbSet.SingleOrDefaultAsync(s => s.Guid == guid).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TModel>> GetAsync()
         {
-            return await _dbSet.ToListAsync().ConfigureAwait(false);
+            return await DbSet.ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<TModel>> GetAsync(Expression<Func<TModel, bool>> query)
         {
-            return await _dbSet.Where(query).ToListAsync().ConfigureAwait(false);
+            return await DbSet.Where(query).ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<bool> IsExistsAsync(Guid guid)
         {
-            return await _dbSet.AnyAsync(s => s.Guid == guid).ConfigureAwait(false);
+            return await DbSet.AnyAsync(s => s.Guid == guid).ConfigureAwait(false);
         }
 
         public async Task<bool> IsExistsAsync(Expression<Func<TModel, bool>> query)
         {
-            return await _dbSet.AnyAsync(query).ConfigureAwait(false);
+            return await DbSet.AnyAsync(query).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(TModel model)
         {
-            _dbSet.Update(model);
-            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            DbSet.Update(model);
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(Guid guid)
         {
-            var source = await _dbSet.SingleOrDefaultAsync(s => s.Guid == guid);
-            _dbContext.Remove(source);
-            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            var model = await DbSet.SingleOrDefaultAsync(s => s.Guid == guid);
+            DbContext.Remove(model);
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(Expression<Func<TModel, bool>> query)
         {
-            var models = await _dbSet.Where(query).ToListAsync();
-            _dbContext.RemoveRange(models);
-            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+            var models = await DbSet.Where(query).ToListAsync();
+            DbContext.RemoveRange(models);
+            await DbContext.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

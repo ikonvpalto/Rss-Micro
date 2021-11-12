@@ -54,7 +54,7 @@ namespace Filter.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> EnsureFiltersValidAsync([FromBody] IEnumerable<string> filters)
         {
-            await _filterProvider.EnsureFiltersValidAsync(filters).ConfigureAwait(false);
+            await _filterProvider.EnsureFiltersIsValidAsync(filters).ConfigureAwait(false);
             return Ok();
         }
 

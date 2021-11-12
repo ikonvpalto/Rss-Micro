@@ -7,6 +7,7 @@ using Downloader.Common.Contracts;
 using Filter.Common.Contracts;
 using Gateway.Models;
 using Microsoft.Extensions.Logging;
+using Sender.Common.Contracts;
 
 namespace Gateway.Services
 {
@@ -16,17 +17,20 @@ namespace Gateway.Services
         private readonly IMapper _mapper;
         private readonly IDownloaderProvider _downloaderProvider;
         private readonly IFilterProvider _filterProvider;
+        private readonly ISenderProvider _senderProvider;
 
         public RssSubscriptionProvider(
             ILogger<RssSubscriptionProvider> logger,
             IMapper mapper,
             IDownloaderProvider downloaderProvider,
-            IFilterProvider filterProvider)
+            IFilterProvider filterProvider,
+            ISenderProvider senderProvider)
         {
             _logger = logger;
             _mapper = mapper;
             _downloaderProvider = downloaderProvider;
             _filterProvider = filterProvider;
+            _senderProvider = senderProvider;
         }
 
         public async Task<RssSubscription> GetAsync(Guid guid)
@@ -34,10 +38,13 @@ namespace Gateway.Services
             // Better to have separate service with full data
 
             var rssSource = await _downloaderProvider.GetAsync(guid).ConfigureAwait(false);
-            var filter = await _filterProvider.GetAsync(guid).ConfigureAwait(false);
-
             var model = _mapper.Map<RssSubscription>(rssSource);
+
+            var filter = await _filterProvider.GetAsync(guid).ConfigureAwait(false);
             model = _mapper.Map(filter, model);
+
+            var receivers = await _senderProvider.GetAsync(guid).ConfigureAwait(false);
+            model = _mapper.Map(receivers, model);
 
             return model;
         }
@@ -49,6 +56,9 @@ namespace Gateway.Services
 
             var filters = (await _filterProvider.GetAsync().ConfigureAwait(false)).ToArray();
             var filterMap = filters.ToDictionary(s => s.Guid, s => s);
+
+            var receivers = (await _senderProvider.GetAsync().ConfigureAwait(false)).ToArray();
+            var receiverMap = receivers.ToDictionary(s => s.Guid, s => s);
 
             var guids = rssSources.Select(s => s.Guid);
             var rssSubscriptions = guids
@@ -64,9 +74,15 @@ namespace Gateway.Services
                         _logger.LogError("Can't find filter with guid {1:D}", g);
                         return null;
                     }
+                    if (!receiverMap.ContainsKey(g))
+                    {
+                        _logger.LogError("Can't find receivers with guid {1:D}", g);
+                        return null;
+                    }
 
                     var result = _mapper.Map<RssSubscription>(rssSourcesMap[g]);
                     result = _mapper.Map(filterMap[g], result);
+                    result = _mapper.Map(receiverMap[g], result);
 
                     return result;
                 })

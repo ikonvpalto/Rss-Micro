@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Common.Exceptions;
 using Downloader.API.ExternalRepositories;
+using Downloader.API.ExternalServices;
 using Downloader.API.Models;
 using Downloader.API.Repositories;
 using Downloader.API.Resources;
@@ -17,16 +18,16 @@ namespace Downloader.API.Services
     {
         private readonly IRssSourceRepository _rssSourceRepository;
         private readonly IMapper _mapper;
-        private readonly IRssExternalRepository _rssExternalRepository;
+        private readonly IRssExternalService _rssExternalService;
 
         public DownloaderManager(
             IRssSourceRepository rssSourceRepository,
             IMapper mapper,
-            IRssExternalRepository rssExternalRepository)
+            IRssExternalService rssExternalService)
         {
             _rssSourceRepository = rssSourceRepository;
             _mapper = mapper;
-            _rssExternalRepository = rssExternalRepository;
+            _rssExternalService = rssExternalService;
         }
 
         public async Task CreateAsync(RssSourceManageModel rssSource)
@@ -36,7 +37,7 @@ namespace Downloader.API.Services
                 throw new AlreadyExistsException(Localization.RssSourceAlreadyExists);
             }
 
-            await _rssExternalRepository.EnsureCorrectRssSourceAsync(rssSource.Url).ConfigureAwait(false);
+            await _rssExternalService.EnsureCorrectRssSourceAsync(rssSource.Url).ConfigureAwait(false);
 
             var model = _mapper.Map<RssSource>(rssSource);
             model.LastSuccessDownloading = DateTime.MinValue;
@@ -51,7 +52,7 @@ namespace Downloader.API.Services
                 throw new NotFoundException(Localization.RssSourceNotFound);
             }
 
-            await _rssExternalRepository.EnsureCorrectRssSourceAsync(rssSource.Url).ConfigureAwait(false);
+            await _rssExternalService.EnsureCorrectRssSourceAsync(rssSource.Url).ConfigureAwait(false);
 
             var model = await _rssSourceRepository.GetAsync(rssSource.Guid).ConfigureAwait(false);
             model = _mapper.Map(rssSource, model);
@@ -78,7 +79,7 @@ namespace Downloader.API.Services
 
             var rssSource = await _rssSourceRepository.GetAsync(rssSourceGuid).ConfigureAwait(false);
 
-            var news = await _rssExternalRepository.RequestRssSourceAsync(rssSource.Url).ConfigureAwait(false);
+            var news = await _rssExternalService.RequestRssSourceAsync(rssSource.Url).ConfigureAwait(false);
             var result = news.Select(_mapper.Map<NewsItem>);
 
             rssSource.LastSuccessDownloading = DateTime.Today;

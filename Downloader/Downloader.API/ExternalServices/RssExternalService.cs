@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Common.Exceptions;
 using Common.Extensions;
+using Downloader.API.ExternalServices;
 using Downloader.API.Models;
 using Downloader.API.Resources;
 using Microsoft.Extensions.Logging;
 
 namespace Downloader.API.ExternalRepositories
 {
-    public sealed class RssExternalRepository : IRssExternalRepository
+    public sealed class RssExternalService : IRssExternalService
     {
         private const string RssRootTag = "rss";
         private const string RssRootTagVersionAttribute = "version";
@@ -23,9 +24,9 @@ namespace Downloader.API.ExternalRepositories
         private const int RequiredRssVersion = 2;
 
         private readonly HttpClient _httpClient;
-        private readonly ILogger<RssExternalRepository> _logger;
+        private readonly ILogger<RssExternalService> _logger;
 
-        public RssExternalRepository(HttpClient httpClient, ILogger<RssExternalRepository> logger)
+        public RssExternalService(HttpClient httpClient, ILogger<RssExternalService> logger)
         {
             _httpClient = httpClient;
             _logger = logger;

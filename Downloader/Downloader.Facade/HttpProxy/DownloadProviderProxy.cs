@@ -29,7 +29,7 @@ namespace Downloader.Facade.HttpProxy
             return await _httpClient.InternalGet<IEnumerable<RssSourceReadModel>>($"{_baseUrl}/api/rss-sources").ConfigureAwait(false);
         }
 
-        public async Task EnsureRssSourceValidAsync(string rssSourceUrl)
+        public async Task EnsureRssSourceIsValidAsync(string rssSourceUrl)
         {
             //ToDo: rssSourceUrl should be encoded because also may have query params witch may be interpreted as main uri params
             await _httpClient.InternalGet($"{_baseUrl}/api/rss-sources/ensure-valid?rssSourceUrl={rssSourceUrl}").ConfigureAwait(false);
