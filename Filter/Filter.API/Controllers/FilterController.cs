@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Filter.API.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("api/filter")]
     public sealed class FilterController : ControllerBase
     {

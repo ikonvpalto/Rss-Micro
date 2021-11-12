@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Any;
 using Newtonsoft.Json;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Api.Common
 {
@@ -48,9 +50,15 @@ namespace Api.Common
 
             services.AddSwaggerGen(c =>
             {
+                var commentsFileName = entryAssembly?.GetName().Name + ".xml";
+                var commentsFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, commentsFileName);
+
                 c.SwaggerDoc("v1", new () {Title = assemblyName, Version = "v1"});
-                c.MapType<TimeSpan>(() => new () { Type = "string", Default = new OpenApiString("1.00:00:00"), Format = DateTimeFormats.TimeSpanJsonFormat });
+                c.IncludeXmlComments(commentsFile);
+
+                AddSwaggerDocs(c);
             });
+            services.AddSwaggerGenNewtonsoftSupport();
 
             services.AddAutoMapper(entryAssembly);
 
@@ -95,6 +103,8 @@ namespace Api.Common
         }
 
         protected abstract IServiceCollection RegisterServices(IServiceCollection services);
+
+        protected virtual void AddSwaggerDocs(SwaggerGenOptions swaggerGenOptions) {}
 
         private string GetEntryAssemblyName() => GetEntryAssembly().GetName().Name ?? string.Empty;
 

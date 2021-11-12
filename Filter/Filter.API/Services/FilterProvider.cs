@@ -46,11 +46,12 @@ namespace Filter.API.Services
             }
 
             var models = await _filterRepository.GetGroupAsync(filterGuid);
-            foreach (var model in models)
-            {
-                var regex = new Regex(model.Filter);
-                news = news.Where(n => regex.IsMatch(n.Description) || regex.IsMatch(n.Title));
-            }
+            news = news.Where(n =>
+                models.Any(m =>
+                {
+                    var regex = new Regex(m.Filter);
+                    return regex.IsMatch(n.Description) || regex.IsMatch(n.Title);
+                }));
 
             return news;
         }

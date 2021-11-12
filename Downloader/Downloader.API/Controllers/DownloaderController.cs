@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Downloader.API.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("api/rss-sources")]
     public sealed class DownloaderController : ControllerBase
     {

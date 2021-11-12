@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Manager.API.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("api/manager")]
     public sealed class ManagerController : ControllerBase
     {

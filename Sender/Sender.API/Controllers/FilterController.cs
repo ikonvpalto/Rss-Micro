@@ -10,6 +10,7 @@ using Sender.Common.Models;
 namespace Sender.API.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("api/sender")]
     public sealed class ReceiversController : ControllerBase
     {
