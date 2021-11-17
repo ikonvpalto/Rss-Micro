@@ -2,12 +2,8 @@
 
 namespace Downloader.Common.Models
 {
-    public sealed class RssSourceReadModel
+    public sealed class RssSourceReadModel : BaseRssSourceModel
     {
-        public Guid Guid { get; set; }
-
-        public string Url { get; set; }
-
         public DateTime LastSuccessDownloading { get; set; }
     }
 }

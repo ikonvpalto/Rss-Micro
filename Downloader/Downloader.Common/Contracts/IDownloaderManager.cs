@@ -14,5 +14,7 @@ namespace Downloader.Common.Contracts
         Task DeleteAsync(Guid rssSourceGuid);
 
         Task<IEnumerable<NewsItem>> DownloadNewsAsync(Guid rssSourceGuid);
+
+        Task<IEnumerable<NewsItem>> DownloadAllNewsAsync();
     }
 }

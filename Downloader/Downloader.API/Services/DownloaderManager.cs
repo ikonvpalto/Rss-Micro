@@ -87,5 +87,20 @@ namespace Downloader.API.Services
 
             return result;
         }
+
+        public async Task<IEnumerable<NewsItem>> DownloadAllNewsAsync()
+        {
+            var rssSources = await _rssSourceRepository.GetAsync().ConfigureAwait(false);
+
+            var news = new List<RssSourceResponseItem>();
+            foreach (var rssSource in rssSources)
+            {
+                news.AddRange(await _rssExternalService.RequestRssSourceAsync(rssSource.Url).ConfigureAwait(false));
+                rssSource.LastSuccessDownloading = DateTime.Today;
+                await _rssSourceRepository.UpdateAsync(rssSource).ConfigureAwait(false);
+            }
+
+            return news.Select(_mapper.Map<NewsItem>);
+        }
     }
 }

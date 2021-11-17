@@ -1,11 +1,6 @@
-﻿using System;
-
-namespace Downloader.Common.Models
+﻿namespace Downloader.Common.Models
 {
-    public sealed class RssSourceManageModel
+    public sealed class RssSourceManageModel : BaseRssSourceModel
     {
-        public Guid Guid { get; set; }
-
-        public string Url { get; set; }
     }
 }

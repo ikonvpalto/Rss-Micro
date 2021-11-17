@@ -99,5 +99,15 @@ namespace Downloader.API.Controllers
             var news = await _downloaderManager.DownloadNewsAsync(rssSourceGuid).ConfigureAwait(false);
             return Ok(news);
         }
+
+        [HttpPost]
+        [Route("news")]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(typeof(IEnumerable<NewsItem>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DownloadAllNewsAsync()
+        {
+            var news = await _downloaderManager.DownloadAllNewsAsync().ConfigureAwait(false);
+            return Ok(news);
+        }
     }
 }

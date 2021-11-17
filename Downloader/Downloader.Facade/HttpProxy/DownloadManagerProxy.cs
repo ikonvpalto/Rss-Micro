@@ -38,5 +38,10 @@ namespace Downloader.Facade.HttpProxy
         {
             return await _httpClient.InternalPost<IEnumerable<NewsItem>>($"{_baseUrl}/api/rss-sources/{rssSourceGuid:D}/news").ConfigureAwait(false);
         }
+
+        public async Task<IEnumerable<NewsItem>> DownloadAllNewsAsync()
+        {
+            return await _httpClient.InternalPost<IEnumerable<NewsItem>>($"{_baseUrl}/api/rss-sources/news").ConfigureAwait(false);
+        }
     }
 }

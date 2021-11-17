@@ -1,0 +1,13 @@
+﻿@model Downloader.Common.Models.BaseRssSourceModel
+
+<form asp-action="AddRssSource">
+    <fieldset class="rss-source-form">
+        @Html.LabelFor(m => m.Url)
+        @Html.TextBoxFor(m => m.Url)
+        @Html.ValidationMessageFor(m => m.Url)
+
+        <input type="hidden" name="Guid" id="Guid" value="@Model.Guid">
+
+        <button type="submit">Add</button>
+    </fieldset>
+</form>

@@ -1,0 +1,14 @@
+@model IEnumerable<Downloader.Common.Models.NewsItem>
+@{
+    ViewData["Title"] = "News";
+}
+<h1>@ViewData["Title"]</h1>
+
+@foreach (var newsItem in Model)
+{
+    <article>
+        <h3>@newsItem.Title</h3>
+        <time datetime="@newsItem.PublishDate.ToString("s")">@newsItem.PublishDate.ToString("D")</time>
+        @Html.Raw(newsItem.Description)
+    </article>
+}
