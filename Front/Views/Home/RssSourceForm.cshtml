@@ -1,0 +1,41 @@
+﻿@model Front.ViewModels.RssSubscriptionViewModel
+
+@{
+    var isSourceNew = Model.Guid == Guid.Empty;
+    ViewBag.Title = isSourceNew ? "New RSS source" : "Update RSS source";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<form asp-action="CreateOrUpdateRssSource" class="rss-source-form">
+    @Html.HiddenFor(m => m.Guid)
+
+    <fieldset class="rss-source-form_field-group">
+        <legend class="text__calm rss-source-form_legend">RSS source</legend>
+        @Html.TextBoxFor(m => m.RssSource, new { placeholder = "Url", type = "url", @class = "input__stretching rss-source-form_field" })
+    </fieldset>
+
+    <fieldset class="rss-source-form_field-group">
+        <legend class="text__calm rss-source-form_legend">Filters</legend>
+        @Html.TextBoxFor(m => m.Filters, new { placeholder = "Key words (comma separated)", multiple = true, @class = "input__stretching rss-source-form_field" })
+    </fieldset>
+
+    <fieldset class="rss-source-form_field-group">
+        <legend class="text__calm rss-source-form_legend">Mailing settings</legend>
+
+        @Html.CheckBoxFor(m => m.NeedToSendEmails, new { @class = "rss-source-form_field" })
+        @Html.LabelFor(m => m.NeedToSendEmails, new { @class = "rss-source-form_label" })
+
+        <div @(Model.NeedToSendEmails ? "" : "hidden") id="MailingOptions">
+            @Html.TextBoxFor(m => m.Receivers, new { placeholder = "Emails (comma separated)", multiple = true, type = "email", @class = "input__stretching rss-source-form_field" })
+
+            <div class="cron-input rss-source-form_field"></div>
+            @Html.HiddenFor(m => m.Periodicity, new { @class = "cron-input_value" })
+        </div>
+    </fieldset>
+
+    <div class="rss-source-form_actions">
+        <button type="submit">@(isSourceNew ? "Add" : "Update")</button>
+        <a asp-action="ShowRssSources">Cancel</a>
+    </div>
+</form>

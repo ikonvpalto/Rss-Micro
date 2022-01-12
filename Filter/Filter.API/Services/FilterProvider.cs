@@ -27,7 +27,9 @@ namespace Filter.API.Services
         public async Task<NewsFilterModel> GetAsync(Guid filterGuid)
         {
             var models = await _filterRepository.GetGroupAsync(filterGuid);
-            return _mapper.Map<NewsFilterModel>(models);
+            var filters = _mapper.Map<NewsFilterModel>(models);
+            filters.Guid = filterGuid;
+            return filters;
         }
 
         public async Task<IEnumerable<NewsFilterModel>> GetAsync()
@@ -40,18 +42,17 @@ namespace Filter.API.Services
 
         public async Task<IEnumerable<NewsItem>> FilterNewsAsync(Guid filterGuid, IEnumerable<NewsItem> news)
         {
-            if (!await _filterRepository.IsExistsAsync(f => f.GroupGuid == filterGuid).ConfigureAwait(false))
-            {
-                throw new NotFoundException(Localization.FilterNotFound);
-            }
-
             var models = await _filterRepository.GetGroupAsync(filterGuid);
-            news = news.Where(n =>
-                models.Any(m =>
-                {
-                    var regex = new Regex(m.Filter);
-                    return regex.IsMatch(n.Description) || regex.IsMatch(n.Title);
-                }));
+
+            if (models.Any())
+            {
+                news = news.Where(n =>
+                    models.Any(m =>
+                    {
+                        var regex = new Regex(m.Filter);
+                        return regex.IsMatch(n.Description) || regex.IsMatch(n.Title);
+                    }));
+            }
 
             return news;
         }

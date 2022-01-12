@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "About";
+}
+
+<article class="about">
+    <h1 class="about_header">It's a RssService</h1>
+    <h3 class="about_description">Aggregator of RSS sources that allow you to read news from interesting online newspapers, filter articles and setup mailing them right into your email box</h3>
+    <p class="about_use-case">To start using service you just need to:</p>
+    <ol>
+        <li class="about_use-case_action">
+            <a class="link__call-to-action" asp-action="ShowRssSources">Add some RSS sources</a>
+        </li>
+        <li class="about_use-case_action">
+            Set up mailing settings (if you prefer receive news on email)
+        </li>
+        <li class="about_use-case_action">
+            And read news on email or
+            <a class="link__call-to-action" asp-action="ShowNews">on this website</a>
+        </li>
+    </ol>
+</article>

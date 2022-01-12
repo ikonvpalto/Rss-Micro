@@ -1,74 +1,92 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using AutoMapper;
 using Common.Exceptions;
-using Downloader.Common.Contracts;
-using Downloader.Common.Models;
 using Microsoft.AspNetCore.Mvc;
 using Front.Models;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Front.ViewModels;
+using Gateway.Common.Contracts;
+using Gateway.Common.Models;
 
 namespace Front.Controllers
 {
     [Route("")]
     public class HomeController : Controller
     {
-        private readonly IDownloaderProvider _downloaderProvider;
-        private readonly IDownloaderManager _downloaderManager;
+        private const string WelcomePageViewed = "WelcomePageViewed";
+
+        private readonly IRssServiceProvider _rssServiceProvider;
+        private readonly IRssServiceManager _rssServiceManager;
+        private readonly IMapper _mapper;
 
         public HomeController(
-            IDownloaderProvider downloaderProvider,
-            IDownloaderManager downloaderManager)
+            IRssServiceProvider rssServiceProvider,
+            IRssServiceManager rssServiceManager, IMapper mapper)
         {
-            _downloaderProvider = downloaderProvider;
-            _downloaderManager = downloaderManager;
+            _rssServiceProvider = rssServiceProvider;
+            _rssServiceManager = rssServiceManager;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [Route("")]
         public IActionResult Index()
         {
-            return RedirectToAction("ShowRssSources");
+            return IsWelcomePageViewed()
+                ? RedirectToAction("ShowNews")
+                : RedirectToAction("ShowAboutPage");
         }
 
         [HttpGet]
         [Route("rss-source")]
         public async Task<IActionResult> ShowRssSourcesAsync()
         {
-            var rssSources = await _downloaderProvider.GetAsync().ConfigureAwait(false);
-            return View("RssSources", rssSources);
+            var rssSources = await _rssServiceProvider.GetSubscriptionsAsync().ConfigureAwait(false);
+            var viewModels = _mapper.Map<ICollection<RssSubscriptionViewModel>>(rssSources);
+            return View("RssSources", viewModels);
+        }
+
+        [HttpGet]
+        [Route("about")]
+        public IActionResult ShowAboutPageAsync()
+        {
+            return View("About");
+        }
+
+        [HttpGet]
+        [Route("rss-source/create")]
+        public IActionResult ShowRssSourceCreatePageAsync()
+        {
+            var rssSource = new RssSubscriptionViewModel { Guid = Guid.Empty };
+            return View("RssSourceForm", rssSource);
+        }
+
+        [HttpGet]
+        [Route("rss-source/{guid:guid}/update")]
+        public async Task<IActionResult> ShowRssSourceUpdatePageAsync([FromRoute] Guid guid)
+        {
+            var rssSource = await _rssServiceProvider.GetSubscriptionAsync(guid);
+            var viewModel = _mapper.Map<RssSubscriptionViewModel>(rssSource);
+            return View("RssSourceForm", viewModel);
         }
 
         [HttpPost]
-        [Route("rss-source/create")]
-        public async Task<IActionResult> AddRssSourceAsync(RssSourceManageModel rssSource)
+        [Route("rss-source")]
+        public async Task<IActionResult> CreateOrUpdateRssSourceAsync([FromForm] RssSubscriptionViewModel rssSourceViewModel)
         {
+            var model = _mapper.Map<RssSubscription>(rssSourceViewModel);
             try
             {
-                await _downloaderManager.CreateAsync(rssSource).ConfigureAwait(false);
+                await _rssServiceManager.CreateOrUpdateSubscriptionAsync(model).ConfigureAwait(false);
             }
             catch (BaseHttpException e)
             {
-                ModelState.AddModelError("Url", "Not a valid rss source");
+                ModelState.AddModelError(nameof(rssSourceViewModel.RssSource), "Not a valid rss source");
+                return View("RssSourceForm", rssSourceViewModel);
             }
 
-            return RedirectToAction("ShowRssSources");
-        }
-
-        [HttpPost]
-        [Route("rss-source/update")]
-        public async Task<IActionResult> UpdateRssSourceAsync(RssSourceManageModel rssSource)
-        {
-            try
-            {
-                await _downloaderManager.UpdateAsync(rssSource).ConfigureAwait(false);
-            }
-            catch (BaseHttpException _)
-            {
-                var rssSources = await _downloaderProvider.GetAsync().ConfigureAwait(false);
-                ModelState.AddModelError<RssSourceManageModel>(s => s.Url, "Not a valid rss source");
-                return View("RssSources", rssSources);
-            }
             return RedirectToAction("ShowRssSources");
         }
 
@@ -76,7 +94,7 @@ namespace Front.Controllers
         [Route("rss-source/{rssSourceGuid:guid}/delete")]
         public async Task<IActionResult> DeleteRssSourceAsync([FromRoute] Guid rssSourceGuid)
         {
-            await _downloaderManager.DeleteAsync(rssSourceGuid).ConfigureAwait(false);
+            await _rssServiceManager.DeleteSubscriptionAsync(rssSourceGuid).ConfigureAwait(false);
             return RedirectToAction("ShowRssSources");
         }
 
@@ -84,7 +102,7 @@ namespace Front.Controllers
         [Route("news")]
         public async Task<IActionResult> ShowNewsAsync()
         {
-            var news = await _downloaderManager.DownloadAllNewsAsync().ConfigureAwait(false);
+            var news = await _rssServiceManager.DownloadNewsAsync().ConfigureAwait(false);
             return View("News", news);
         }
 
@@ -93,5 +111,8 @@ namespace Front.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        private bool IsWelcomePageViewed()
+            => HttpContext.Request.Cookies.ContainsKey(WelcomePageViewed);
     }
 }

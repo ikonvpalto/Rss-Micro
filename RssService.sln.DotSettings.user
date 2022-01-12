@@ -1,0 +1,35 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Reformat/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Applicability/=File/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Scope/=0A12C11AC0ACCA4E921B6B2CEE180C57/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Scope/=0A12C11AC0ACCA4E921B6B2CEE180C57/Type/@EntryValue">InAnyWebProject</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/CustomProperties/=FileName/@EntryIndexedValue">Dockerfile</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/CustomProperties/=Extension/@EntryIndexedValue"></s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/CustomProperties/=ValidateFileName/@EntryIndexedValue">False</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Description/@EntryValue">Dockerfile</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Text/@EntryValue">FROM mcr.microsoft.com/dotnet/aspnet:latest AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:latest AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore
+WORKDIR "/src/$SERVICENAME$/$PROJECTNAME$"
+RUN dotnet publish "$PROJECTNAME$.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "$PROJECTNAME$.dll"]
+</s:String>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Field/=PROJECTNAME/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Field/=PROJECTNAME/Expression/@EntryValue">getProjectName()</s:String>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Field/=PROJECTNAME/Order/@EntryValue">0</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Field/=SERVICENAME/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=DB07544FD61CB74E9B787C0F291B2AE8/Field/=SERVICENAME/Order/@EntryValue">1</s:Int64>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=Auth_002FAuth_002EAPI_002FResources_002FLocalization/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean></wpf:ResourceDictionary>

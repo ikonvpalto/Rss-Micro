@@ -36,6 +36,6 @@
         <value>Provided email {0} isn't valid.</value>
     </data>
     <data name="EmailSubject" xml:space="preserve">
-        <value>News digest from rss service.</value>
+        <value>News digest from RssService</value>
     </data>
 </root>

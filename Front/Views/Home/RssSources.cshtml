@@ -1,14 +1,12 @@
-﻿@using Downloader.Common.Models
-@model IEnumerable<Downloader.Common.Models.RssSourceReadModel>
+﻿@model ICollection<Front.ViewModels.RssSubscriptionViewModel>
 @{
-    ViewData["Title"] = "Rss sources";
-    var newSource = new RssSourceManageModel { Guid = Guid.NewGuid() };
+    ViewData["Title"] = "RSS sources";
 }
 <h1>@ViewData["Title"]</h1>
 
 @foreach (var source in Model)
 {
-    @Html.Partial("_RssSourceUpdateForm", source)
+    @await Html.PartialAsync("_RssSourceItem", source)
 }
 
-@Html.Partial("_RssSourceCreateForm", newSource)
+<a asp-action="ShowRssSourceCreatePage" class="link__button">Add rss source <i class="fas fa-plus"></i></a>

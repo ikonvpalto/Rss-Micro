@@ -61,11 +61,29 @@ namespace Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t parse response body to object, request address: {0}, responded content type: {1}, expected type: {2}.
+        /// </summary>
+        internal static string CanNotParseBody {
+            get {
+                return ResourceManager.GetString("CanNotParseBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Time {0} format isn&apos;t correct. It should be like {1}.
         /// </summary>
         internal static string IncorrectTimeFormat {
             get {
                 return ResourceManager.GetString("IncorrectTimeFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server internal error.
+        /// </summary>
+        internal static string ServerInternalDefaultError {
+            get {
+                return ResourceManager.GetString("ServerInternalDefaultError", resourceCulture);
             }
         }
     }

@@ -26,7 +26,7 @@ namespace Api.Common.Middlewares
             try
             {
                 await _next(context);
-                _logger.LogTrace("Incoming request {0} completed with {1} status code", context.Request.Path.Value, context.Response.StatusCode);
+                _logger.LogTrace("Incoming request {Path} completed with {Code} status code", context.Request.Path.Value, context.Response.StatusCode);
             }
             catch (Exception error)
             {

@@ -1,0 +1,31 @@
+name: rss-service
+services:
+- name: gateway-api
+  project: Gateway/Gateway.API/Gateway.API.csproj
+  bindings:
+    - port: 5002
+
+- name: downloader-api
+  project: Downloader/Downloader.API/Downloader.API.csproj
+  bindings:
+    - port: 5000
+
+- name: filter-api
+  project: Filter/Filter.API/Filter.API.csproj
+  bindings:
+    - port: 5004
+
+- name: sender-api
+  project: Sender/Sender.API/Sender.API.csproj
+  bindings:
+    - port: 5006
+
+- name: manager-api
+  project: Manager/Manager.API/Manager.API.csproj
+  bindings:
+    - port: 5008
+
+- name: front
+  project: Front/Front.csproj
+  bindings:
+    - port: 5010

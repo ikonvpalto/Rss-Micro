@@ -1,14 +1,24 @@
-@model IEnumerable<Downloader.Common.Models.NewsItem>
+@model ICollection<Downloader.Common.Models.NewsItem>
 @{
     ViewData["Title"] = "News";
 }
-<h1>@ViewData["Title"]</h1>
 
-@foreach (var newsItem in Model)
+@if (!Model.Any())
 {
-    <article>
-        <h3>@newsItem.Title</h3>
-        <time datetime="@newsItem.PublishDate.ToString("s")">@newsItem.PublishDate.ToString("D")</time>
-        @Html.Raw(newsItem.Description)
-    </article>
+    <h1>There is no news</h1>
+}
+else
+{
+    <h1 class="news-block_header">@ViewData["Title"]</h1>
+
+    <div class="news-block">
+        @foreach (var newsItem in Model)
+        {
+            <article>
+                <h3>@newsItem.Title</h3>
+                <time class="text__calm" datetime="@newsItem.PublishDate.ToString("s")">@newsItem.PublishDate.ToString("D")</time>
+                @Html.Raw(newsItem.Description)
+            </article>
+        }
+    </div>
 }

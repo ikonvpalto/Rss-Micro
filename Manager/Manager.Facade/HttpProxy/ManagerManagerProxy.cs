@@ -10,27 +10,25 @@ namespace Manager.Facade.HttpProxy
     public sealed class ManagerManagerProxy : IManagerManager
     {
         private readonly HttpClient _httpClient;
-        private readonly string _baseUrl;
 
-        public ManagerManagerProxy(HttpClient httpClient, string baseUrl)
+        public ManagerManagerProxy(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _baseUrl = baseUrl;
         }
 
         public async Task CreateAsync(JobModel job)
         {
-            await _httpClient.InternalPost($"{_baseUrl}/api/manager", job).ConfigureAwait(false);
+            await _httpClient.InternalPost("/api/manager", job).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(JobModel job)
         {
-            await _httpClient.InternalPut($"{_baseUrl}/api/manager", job).ConfigureAwait(false);
+            await _httpClient.InternalPut("/api/manager", job).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(Guid jobGuid)
         {
-            await _httpClient.InternalDelete($"{_baseUrl}/api/manager/{jobGuid:D}").ConfigureAwait(false);
+            await _httpClient.InternalDelete($"/api/manager/{jobGuid:D}").ConfigureAwait(false);
         }
     }
 }

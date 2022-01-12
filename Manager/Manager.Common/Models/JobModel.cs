@@ -6,6 +6,8 @@ namespace Manager.Common.Models
     {
         public Guid Guid { get; set; }
 
+        public bool IsJobEnabled { get; set; }
+
         public string Periodicity { get; set; }
     }
 }

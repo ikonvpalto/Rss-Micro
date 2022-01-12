@@ -43,7 +43,9 @@ namespace Manager.API.Services
 
             await _jobPeriodicityRepository.CreateAsync(model).ConfigureAwait(false);
 
-            ScheduleJob(job);
+            if (job.IsJobEnabled) {
+                ScheduleJob(job);
+            }
         }
 
         public async Task UpdateAsync(JobModel job)
@@ -59,7 +61,14 @@ namespace Manager.API.Services
 
             await _jobPeriodicityRepository.UpdateAsync(model).ConfigureAwait(false);
 
-            ScheduleJob(job);
+            if (job.IsJobEnabled)
+            {
+                ScheduleJob(job);
+            }
+            else
+            {
+                RemoveJob(job);
+            }
         }
 
         public async Task DeleteAsync(Guid jobGuid)
@@ -80,6 +89,12 @@ namespace Manager.API.Services
                 job.Guid.ToString("D"),
                 x => x.SendNewsAsync(job.Guid),
                 job.Periodicity);
+        }
+
+        private void RemoveJob(JobModel job)
+        {
+            _recurringJobManager.RemoveIfExists(
+                job.Guid.ToString("D"));
         }
     }
 }

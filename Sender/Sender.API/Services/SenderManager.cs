@@ -55,11 +55,6 @@ namespace Sender.API.Services
 
         public async Task UpdateAsync(ReceiversModel receivers)
         {
-            if (!await _emailRepository.IsExistsAsync(f => f.GroupGuid == receivers.Guid).ConfigureAwait(false))
-            {
-                throw new NotFoundException(Localization.ReceiverNotFound);
-            }
-
             await _senderProvider.EnsureReceiversIsValidAsync(receivers.Receivers).ConfigureAwait(false);
 
             await _emailRepository.DeleteGroupAsync(receivers.Guid).ConfigureAwait(false);

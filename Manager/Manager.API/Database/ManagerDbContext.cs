@@ -18,6 +18,7 @@ namespace Manager.API.Database
 
                 builder.Property(s => s.Guid).HasColumnName("Guid").IsRequired().ValueGeneratedNever();
                 builder.Property(s => s.Periodicity).HasColumnName("Periodicity").HasColumnType("varchar(40)").HasMaxLength(40).IsRequired();
+                builder.Property(s => s.IsJobEnabled).HasColumnName("IsJobEnabled").HasColumnType("boolean").IsRequired();
             });
             base.OnModelCreating(modelBuilder);
         }

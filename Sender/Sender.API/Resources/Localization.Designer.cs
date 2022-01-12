@@ -61,7 +61,7 @@ namespace Sender.API.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to News digest from rss service..
+        ///   Looks up a localized string similar to News digest from RssService.
         /// </summary>
         internal static string EmailSubject {
             get {

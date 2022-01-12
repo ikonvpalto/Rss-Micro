@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn>
+        <RootNamespace>Gateway</RootNamespace>
+        <LangVersion>default</LangVersion>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.10.0-alpha.21420.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Downloader\Downloader.Facade\Downloader.Facade.csproj" />
+      <ProjectReference Include="..\..\Filter\Filter.Facade\Filter.Facade.csproj" />
+      <ProjectReference Include="..\..\Manager\Manager.Facade\Manager.Facade.csproj" />
+      <ProjectReference Include="..\..\Sender\Sender.Facade\Sender.Facade.csproj" />
+      <ProjectReference Include="..\..\Shared\Api.Common\Api.Common.csproj" />
+      <ProjectReference Include="..\..\Shared\Common\Common.csproj" />
+      <ProjectReference Include="..\Gateway.Common\Gateway.Common.csproj" />
+    </ItemGroup>
+
+</Project>

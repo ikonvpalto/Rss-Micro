@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using Api.Common.Middlewares;
-using Common;
 using Common.Exceptions;
 using Common.Json;
 using Microsoft.AspNetCore.Builder;
@@ -12,7 +11,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Any;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

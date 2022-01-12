@@ -1,5 +1,8 @@
+using System.Linq;
 using System.Net.Http;
-using Downloader.Facade;
+using System.Reflection;
+using Common.Exceptions;
+using Gateway.Facade;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +13,7 @@ namespace Front
 {
     public class Startup
     {
-        private const string DownloaderAddressParam = "DownloaderAddress";
+        private const string GatewayServiceName = "gateway-api";
 
         public Startup(IConfiguration configuration)
         {
@@ -22,13 +25,22 @@ namespace Front
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            var entryAssembly = Assembly.GetAssembly(GetType());
 
-            services.AddDownloaderProxies(Configuration[DownloaderAddressParam]);
+            services.AddControllersWithViews()
+                .ConfigureApiBehaviorOptions(o =>
+                {
+                    o.InvalidModelStateResponseFactory =
+                        context => throw new BadRequestException(context.ModelState.Values.First().Errors.First().ErrorMessage);
+                });
+
+            services.AddGatewayProxies(Configuration.GetServiceUri(GatewayServiceName).ToString());
 
             services.AddHttpClient();
             // https://docs.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
             services.AddSingleton(provider => provider.GetService<IHttpClientFactory>().CreateClient());
+
+            services.AddAutoMapper(entryAssembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

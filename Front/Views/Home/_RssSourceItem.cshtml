@@ -1,0 +1,9 @@
+﻿@model Front.ViewModels.RssSubscriptionViewModel
+
+<form asp-action="DeleteRssSource" asp-route-rssSourceGuid="@Model.Guid" class="rss-source">
+    <span class="rss-source_info">@Model.RssSource</span>
+    <span class="rss-source_info">Mailing @(Model.NeedToSendEmails ? "on" : "off")</span>
+
+    <a asp-action="ShowRssSourceUpdatePage" asp-route-guid="@Model.Guid" class="link__button"><i class="fas fa-edit"></i></a>
+    <button type="submit" class="button__icon" ><i class="fas fa-times"></i></button>
+</form>

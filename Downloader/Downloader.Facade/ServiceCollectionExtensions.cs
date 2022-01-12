@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using Downloader.Common.Contracts;
 using Downloader.Facade.HttpProxy;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,14 +12,16 @@ namespace Downloader.Facade
         {
             services.AddScoped<IDownloaderProvider>(s =>
             {
-                var httpClient = s.GetService<HttpClient>();
-                return new DownloadProviderProxy(httpClient, baseUrl);
+                var httpClient = s.GetRequiredService<IHttpClientFactory>().CreateClient();
+                httpClient.BaseAddress = new (baseUrl, UriKind.Absolute);
+                return new DownloadProviderProxy(httpClient);
             });
 
             services.AddScoped<IDownloaderManager>(s =>
             {
-                var httpClient = s.GetService<HttpClient>();
-                return new DownloadManagerProxy(httpClient, baseUrl);
+                var httpClient = s.GetRequiredService<IHttpClientFactory>().CreateClient();
+                httpClient.BaseAddress = new (baseUrl, UriKind.Absolute);
+                return new DownloadManagerProxy(httpClient);
             });
 
             return services;

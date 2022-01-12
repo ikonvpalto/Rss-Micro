@@ -7,7 +7,7 @@ namespace Sender.Common.Contracts
 {
     public interface ISenderProvider
     {
-        Task<ReceiversModel> GetAsync(Guid guid);
+        Task<ReceiversModel> GetAsync(Guid receiverGuid);
 
         Task<IEnumerable<ReceiversModel>> GetAsync();
 

@@ -23,9 +23,9 @@ namespace Manager.API
     public sealed class Startup : BaseStartup
     {
         private const string ConnectionStringSetting = "ConnectionString";
-        private const string DownloaderAddressParam = "DownloaderAddress";
-        private const string FilterAddressParam = "FilterAddress";
-        private const string SenderAddressParam = "SenderAddress";
+        private const string DownloaderServiceName = "downloader-api";
+        private const string FilterServiceName = "filter-api";
+        private const string SenderServiceName = "sender-api";
 
         public Startup(IConfiguration configuration) : base(configuration) {}
 
@@ -40,9 +40,9 @@ namespace Manager.API
             services.AddScoped<IManagerProvider, ManagerProvider>();
             services.AddScoped<IMailingService, MailingService>();
 
-            services.AddDownloaderProxies(Configuration[DownloaderAddressParam]);
-            services.AddFilterProxies(Configuration[FilterAddressParam]);
-            services.AddSenderProxies(Configuration[SenderAddressParam]);
+            services.AddDownloaderProxies(Configuration.GetServiceUri(DownloaderServiceName).ToString());
+            services.AddFilterProxies(Configuration.GetServiceUri(FilterServiceName).ToString());
+            services.AddSenderProxies(Configuration.GetServiceUri(SenderServiceName).ToString());
 
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)

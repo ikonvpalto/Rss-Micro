@@ -29,4 +29,10 @@
     <data name="IncorrectTimeFormat" xml:space="preserve">
         <value>Time {0} format isn't correct. It should be like {1}</value>
     </data>
+    <data name="ServerInternalDefaultError" xml:space="preserve">
+        <value>Server internal error</value>
+    </data>
+    <data name="CanNotParseBody" xml:space="preserve">
+        <value>Can't parse response body to object, request address: {0}, responded content type: {1}, expected type: {2}</value>
+    </data>
 </root>

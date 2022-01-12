@@ -48,11 +48,6 @@ namespace Filter.API.Services
 
         public async Task UpdateAsync(NewsFilterModel filter)
         {
-            if (!await _filterRepository.IsExistsAsync(f => f.GroupGuid == filter.Guid).ConfigureAwait(false))
-            {
-                throw new NotFoundException(Localization.FilterNotFound);
-            }
-
             await _filterProvider.EnsureFiltersIsValidAsync(filter.Filters).ConfigureAwait(false);
 
             await _filterRepository.DeleteGroupAsync(filter.Guid).ConfigureAwait(false);
