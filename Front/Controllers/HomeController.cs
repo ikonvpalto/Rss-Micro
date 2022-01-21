@@ -9,6 +9,8 @@ using Front.Models;
 using Front.ViewModels;
 using Gateway.Common.Contracts;
 using Gateway.Common.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
 namespace Front.Controllers
 {
@@ -16,18 +18,23 @@ namespace Front.Controllers
     public class HomeController : Controller
     {
         private const string WelcomePageViewed = "WelcomePageViewed";
+        private const string FrontServiceName = "front";
 
         private readonly IRssServiceProvider _rssServiceProvider;
         private readonly IRssServiceManager _rssServiceManager;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
         public HomeController(
             IRssServiceProvider rssServiceProvider,
-            IRssServiceManager rssServiceManager, IMapper mapper)
+            IRssServiceManager rssServiceManager,
+            IMapper mapper,
+            IConfiguration configuration)
         {
             _rssServiceProvider = rssServiceProvider;
             _rssServiceManager = rssServiceManager;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -52,6 +59,11 @@ namespace Front.Controllers
         [Route("about")]
         public IActionResult ShowAboutPageAsync()
         {
+            if (!IsWelcomePageViewed())
+            {
+                SetWelcomePageViewed();
+            }
+
             return View("About");
         }
 
@@ -114,5 +126,14 @@ namespace Front.Controllers
 
         private bool IsWelcomePageViewed()
             => HttpContext.Request.Cookies.ContainsKey(WelcomePageViewed);
+
+        private void SetWelcomePageViewed()
+            => HttpContext.Response.Cookies.Append(WelcomePageViewed, string.Empty, new CookieOptions
+            {
+                HttpOnly = true,
+                Domain = _configuration.GetServiceUri(FrontServiceName)?.ToString(),
+                MaxAge = TimeSpan.MaxValue,
+                SameSite = SameSiteMode.Strict
+            });
     }
 }
